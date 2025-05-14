@@ -3,7 +3,7 @@ name: Compile Latex and Release PDF
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - main
+      - "*"
     paths:
       - "report/**"
       - "!report/build/**"
