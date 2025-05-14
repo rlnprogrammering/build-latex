@@ -1,0 +1,38 @@
+name: Compile Latex and Release PDF  
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - "*"
+    paths:
+      - "report/**"
+      - "!report/build/**"
+  workflow_dispatch:
+    
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: report/
+
+      - name: Move PDF to build directory
+        run: |
+          mv report/main.pdf report/build/BSc_group_n.pdf
+
+      - name: Upload PDF artifact
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Automated PDF build"
+          push_options: "--force"
+          file_pattern: "*.pdf"
